@@ -33,6 +33,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "adminsortable2",
+    'mptt',
+    'modeltranslation',
     
     # Django App
     "products",
