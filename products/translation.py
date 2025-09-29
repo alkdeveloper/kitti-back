@@ -1,13 +1,9 @@
 # products/translation.py
 from modeltranslation.translator import register, TranslationOptions
-from .models import Category, Product, Slider
+from .models import Item, Slider
 
-@register(Category)
-class CategoryTranslationOptions(TranslationOptions):
-    fields = ('title', 'description',)
-
-@register(Product)
-class ProductTranslationOptions(TranslationOptions):
+@register(Item)
+class ItemTranslationOptions(TranslationOptions):
     fields = ('title', 'description',)
 
 @register(Slider)
