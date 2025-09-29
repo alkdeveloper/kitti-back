@@ -166,7 +166,7 @@ JAZZMIN_SETTINGS = {
     
     # Welcome text
     "welcome_sign": "Kitti Admin Panel'e Hoş Geldiniz",
-    "copyright": "Kitti Ltd",
+    "copyright": "Kitti",
     
     # Search model
     "search_model": ["products.Item"],
@@ -198,7 +198,7 @@ JAZZMIN_SETTINGS = {
     "show_sidebar": True,
     "navigation_expanded": True,
     "hide_apps": [],
-    "hide_models": [],
+    "hide_models": ["auth.Group"],
     
     # List of apps (and/or models) to base side menu ordering off of
     "order_with_respect_to": ["auth", "products"],
