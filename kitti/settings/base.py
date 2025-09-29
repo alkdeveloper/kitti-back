@@ -29,6 +29,11 @@ INSTALLED_APPS = [
 
     # Third-party
     "rest_framework",
+    "drf_spectacular",
+    "adminsortable2",
+    
+    # Django App
+    "products",
 ]
 
 MIDDLEWARE = [
@@ -87,3 +92,15 @@ MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Swagger and Redoc conf:
+REST_FRAMEWORK = {
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Kitti API",
+    "DESCRIPTION": "Kitti Project API Documentation",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
+}
