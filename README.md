@@ -5,7 +5,7 @@
 [![Django](https://img.shields.io/badge/Django-5.0+-green.svg)](https://www.djangoproject.com/)
 [![Python](https://img.shields.io/badge/Python-3.8+-blue.svg)](https://www.python.org/)
 [![API](https://img.shields.io/badge/API-REST-orange.svg)](https://www.django-rest-framework.org/)
-[![BOSOFT](https://img.shields.io/badge/Made%20by-BOSOFT-red.svg)](https://bosoft.com)
+[![BOSOFT](https://img.shields.io/badge/Made%20by-BOSOFT-red.svg)](https://bionluk.com/bologo)
 
 Modern, scalable product management system with multilingual support, REST API, and professional admin interface.
 
@@ -285,6 +285,6 @@ python manage.py run --skip-static
 
 *Excellence in Software Development*
 
-[![BOSOFT](https://img.shields.io/badge/BOSOFT-Professional%20Software%20Solutions-red.svg?style=for-the-badge)](https://bosoft.com)
+[![BOSOFT](https://img.shields.io/badge/BOSOFT-Professional%20Software%20Solutions-red.svg?style=for-the-badge)](https://bionluk.com/bologo)
 
 </div>
