@@ -8,4 +8,4 @@ class ItemTranslationOptions(TranslationOptions):
 
 @register(Slider)
 class SliderTranslationOptions(TranslationOptions):
-    fields = ('title',)
+    fields = ('title', 'image',)
