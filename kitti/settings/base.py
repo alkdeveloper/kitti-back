@@ -22,6 +22,7 @@ DJANGO_SUPERUSER_EMAIL = env("DJANGO_SUPERUSER_EMAIL", default="admin@example.co
 
 # Application definition
 INSTALLED_APPS = [
+    'modeltranslation',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -34,11 +35,28 @@ INSTALLED_APPS = [
     "drf_spectacular",
     "adminsortable2",
     'mptt',
-    'modeltranslation',
     
     # Django App
     "products",
 ]
+
+LANGUAGES = [
+    ('tr', 'Türkçe'),
+    ('en', 'English'),
+]
+
+LANGUAGE_CODE = 'tr'  # Varsayılan dil
+
+# Modeltranslation ayarları
+MODELTRANSLATION_DEFAULT_LANGUAGE = 'tr'
+MODELTRANSLATION_LANGUAGES = ('tr', 'en')
+
+# Opsiyonel: Fallback ayarları
+MODELTRANSLATION_FALLBACK_LANGUAGES = {
+    'default': ('tr', 'en'),
+    'tr': ('en',),
+    'en': ('tr',),
+}
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
