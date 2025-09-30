@@ -14,10 +14,11 @@ class Item(MPTTModel):
     ]
     
     CATEGORY_TYPE_CHOICES = [
-        ('type1', _('Type 1')),
-        ('type2', _('Type 2')),
-        ('type3', _('Type 3')),
-        ('type4', _('Type 4')),
+        ('type1', _('Card View')),
+        ('type2', _('List View')),
+        ('type3', _('Slider Card View')),
+        ('type4', _('Gallery Horizantal Card View')),
+        ('type5', _('Gallery Vertical Card View')),
     ]
     
     # Temel alanlar

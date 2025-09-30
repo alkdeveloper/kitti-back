@@ -22,6 +22,7 @@ DJANGO_SUPERUSER_EMAIL = env("DJANGO_SUPERUSER_EMAIL", default="admin@example.co
 
 # Application definition
 INSTALLED_APPS = [
+    'corsheaders',
     'jazzmin',
     'modeltranslation',
     "django.contrib.admin",
@@ -60,6 +61,7 @@ MODELTRANSLATION_FALLBACK_LANGUAGES = {
 }
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -272,3 +274,6 @@ JAZZMIN_UI_TWEAKS = {
     },
     "actions_sticky_top": False
 }
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True

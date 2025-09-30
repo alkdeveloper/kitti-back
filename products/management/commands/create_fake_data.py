@@ -58,7 +58,7 @@ class Command(BaseCommand):
         """Kategoriler ve altındaki ürünleri oluştur"""
         self.stdout.write('Creating categories and products...')
         
-        category_types = ['type1', 'type2', 'type3', 'type4']
+        category_types = ['type1', 'type2', 'type3', 'type4', 'type5']
         
         for i in range(count):
             # Kategori oluştur
