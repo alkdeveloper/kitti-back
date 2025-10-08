@@ -22,9 +22,9 @@ DJANGO_SUPERUSER_EMAIL = env("DJANGO_SUPERUSER_EMAIL", default="admin@example.co
 
 # Application definition
 INSTALLED_APPS = [
-    'corsheaders',
-    'jazzmin',
-    'modeltranslation',
+    "corsheaders",
+    "jazzmin",
+    "modeltranslation",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -36,10 +36,12 @@ INSTALLED_APPS = [
     "rest_framework",
     "drf_spectacular",
     "adminsortable2",
-    'mptt',
+    "mptt",
+    "ckeditor",
     
     # Django App
     "products",
+    "site_settings",
 ]
 
 LANGUAGES = [
