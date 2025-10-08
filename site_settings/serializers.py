@@ -1,37 +1,36 @@
 from rest_framework import serializers
 from .models import *
 
-# --- Resim URL'si olmayan Serializer'lar (Değişiklik Yok) ---
+# --- DÜZELTİLMESİ GEREKEN SERIALIZER'LAR ---
 
 class MenuItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = MenuItem
-        fields = '__all__'
+        # '__all__' yerine sadece frontend'in ihtiyaç duyduğu alanları belirtiyoruz.
+        # 'modeltranslation' aktif dile göre 'text' alanını dolduracaktır.
+        fields = ['id', 'href', 'text']
 
 class FooterPolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = FooterPolicy
-        fields = '__all__'
+        # 'title' ve 'description' alanları çeviri içerdiği için alanları manuel belirtiyoruz.
+        fields = ['id', 'title', 'description']
+
+# --- Diğer Serializer'lar ---
 
 class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:
         model = SocialMedia
-        fields = '__all__'
-
-
-# --- Resim URL'si Eklenmiş Serializer'lar ---
+        fields = '__all__' # Bu modelde çevrilmiş alan olmadığı için '__all__' kalabilir.
 
 class HeaderSerializer(serializers.ModelSerializer):
-    # 'image' alanı için tam URL döndürmek üzere SerializerMethodField kullanıyoruz.
     image = serializers.SerializerMethodField()
-
     class Meta:
         model = Header
-        # 'image' alanı zaten yukarıda tanımlandığı için 'fields' içinde kalabilir.
+        # Bu zaten doğru yapılandırılmış.
         fields = ['id', 'title', 'description', 'image']
 
     def get_image(self, obj):
-        """Header'daki 'image' alanı için tam URL oluşturur."""
         request = self.context.get('request')
         if obj.image and hasattr(obj.image, 'url'):
             if request:
@@ -40,20 +39,17 @@ class HeaderSerializer(serializers.ModelSerializer):
         return None
 
 class GenericSectionSerializer(serializers.ModelSerializer):
-    # 'image' alanı için tam URL döndürmek üzere SerializerMethodField kullanıyoruz.
     image = serializers.SerializerMethodField()
-
     class Meta:
         model = GenericSection
-        # 'product' alanları Item modeline ait, onları da dahil edelim.
+        # Bu zaten doğru yapılandırılmış.
         fields = [
-            'id', 'type', 'name', 'subtitle', 'title', 'description', 'image',
+            'id', 'type', 'name', 'subtitle', 'title', 'description', 'image', 'mobile_image',
             'button_text_left', 'button_url_left', 'button_text_right', 'button_url_right',
             'product_1', 'product_2', 'product_3'
         ]
 
     def get_image(self, obj):
-        """GenericSection'daki 'image' alanı için tam URL oluşturur."""
         request = self.context.get('request')
         if obj.image and hasattr(obj.image, 'url'):
             if request:
@@ -62,15 +58,13 @@ class GenericSectionSerializer(serializers.ModelSerializer):
         return None
 
 class FooterInfoSerializer(serializers.ModelSerializer):
-    # 'logo' alanı için tam URL döndürmek üzere SerializerMethodField kullanıyoruz.
     logo = serializers.SerializerMethodField()
-
     class Meta:
         model = FooterInfo
+        # 'footer_text' alanı çeviri içerdiği için alanları manuel belirtiyoruz.
         fields = ['id', 'logo', 'footer_text']
 
     def get_logo(self, obj):
-        """Footer'daki 'logo' alanı için tam URL oluşturur."""
         request = self.context.get('request')
         if obj.logo and hasattr(obj.logo, 'url'):
             if request:
@@ -81,11 +75,7 @@ class FooterInfoSerializer(serializers.ModelSerializer):
 # --- Ana, Kapsayıcı Serializer ---
 
 class SiteSettingsSerializer(serializers.ModelSerializer):
-    # 'logo' alanı için tam URL döndürmek üzere SerializerMethodField kullanıyoruz.
     logo = serializers.SerializerMethodField()
-    
-    # Nested serializer'lar, context'i otomatik olarak alacak ve
-    # içlerindeki resim URL'leri de tam olarak oluşturulacaktır.
     menu_items = MenuItemSerializer(many=True, read_only=True)
     headers = HeaderSerializer(many=True, read_only=True)
     sections = GenericSectionSerializer(many=True, read_only=True)
@@ -95,7 +85,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SiteSettings
-        # 'fields' listesine 'logo' alanını da ekliyoruz.
+        # 'site_title' ve 'site_description' çeviri içeriyor, bu zaten doğru yapılandırılmış.
         fields = [
             'id', 'logo', 'site_title', 'site_description',
             'menu_items', 'headers', 'sections',
@@ -103,7 +93,6 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         ]
 
     def get_logo(self, obj):
-        """Ana site ayarlarındaki 'logo' için tam URL oluşturur."""
         request = self.context.get('request')
         if obj.logo and hasattr(obj.logo, 'url'):
             if request:

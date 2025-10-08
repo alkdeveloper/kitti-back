@@ -81,7 +81,7 @@ class GenericSectionAdmin(BaseTranslationAdmin):
     list_filter = ('type',)
     fieldsets = (
         (_("Genel Bilgiler"), {
-            'fields': ('type', 'name', 'subtitle_tr', 'subtitle_en', 'title_tr', 'title_en', 'description_tr', 'description_en', 'image')
+            'fields': ('type', 'name', 'subtitle_tr', 'subtitle_en', 'title_tr', 'title_en', 'description_tr', 'description_en', 'image', 'mobile_image')
         }),
         (_("Buton Bilgileri"), {
             'fields': (

@@ -52,6 +52,20 @@ class Command(BaseCommand):
                     section.image.save(filename, File(f), save=True)
             else:
                 print(f"Dosya bulunamadı: {static_path}")
+        
+        def add_image_to_section_for_mobile(section, filename):
+            """
+            Statik dosyayı alıp modelin ImageField'ine kaydeder.
+            """
+            # Statik dosya yolu
+            static_path = os.path.join("static/site_data", filename)
+            
+            if os.path.exists(static_path):
+                with open(static_path, 'rb') as f:
+                    # Modelin image alanına kaydet
+                    section.mobile_image.save(filename, File(f), save=True)
+            else:
+                print(f"Dosya bulunamadı: {static_path}")
 
         # === 4️⃣ Header ===
         header_1, created_1 = Header.objects.get_or_create(
@@ -101,6 +115,7 @@ class Command(BaseCommand):
         )
         if created_3:
             add_image_to_section(section_1, "section_1.png")
+            add_image_to_section_for_mobile(section_1, "section_1_mobile.png")
 
         # Favorites of the Season Section
         GenericSection.objects.get_or_create(
