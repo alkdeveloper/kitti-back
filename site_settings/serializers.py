@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from products.serializers import ProductSerializer
 
 # --- DÜZELTİLMESİ GEREKEN SERIALIZER'LAR ---
 
@@ -40,6 +41,9 @@ class HeaderSerializer(serializers.ModelSerializer):
 
 class GenericSectionSerializer(serializers.ModelSerializer):
     image = serializers.SerializerMethodField()
+    product_1 = ProductSerializer(read_only=True)
+    product_2 = ProductSerializer(read_only=True)
+    product_3 = ProductSerializer(read_only=True)
     class Meta:
         model = GenericSection
         # Bu zaten doğru yapılandırılmış.
