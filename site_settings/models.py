@@ -69,6 +69,87 @@ class GenericSection(models.Model):
     def __str__(self):
         return f"{self.get_type_display()} - {self.name}"
 
+class GenericSectionOurStory(models.Model):
+    SECTION_TYPES = [
+        ('big_story', "Big Story"),
+        ('all_over', 'All Over'),
+        ('power_of_a_group', 'Power Of a Group'),
+        ('what_do_we_produce', 'What Do We Produce'),
+        ('best_selling_accessories', "Best Selling Accessories"),
+        ('health_and_quality', 'Health and Quality'),
+        ('safe_facilities', 'Safe Facilities'),
+        ('Harmless Materials', 'Harmless Materials'),
+        ('growing_safely', 'Growing Safely'),
+        ('kitti_products', 'Kitti Products'),
+    ]
+
+    site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='sections_our_story')
+    type = models.CharField(max_length=50, choices=SECTION_TYPES, default='generic_our_story')
+    
+    name = models.CharField(max_length=255)
+    subtitle = models.CharField(max_length=255, blank=True, null=True)
+    title = models.CharField(max_length=255)
+    description = RichTextField(blank=True, null=True)
+
+    subimage = models.CharField(max_length=255, blank=True, null=True)
+    mobile_image = models.FileField(upload_to='site/sections/our_story', blank=True, null=True)
+    image = models.FileField(upload_to='site/sections/our_story', blank=True, null=True)
+    
+    # Butonlar
+    button_text = models.CharField(max_length=255, blank=True, null=True)
+    button_url = models.CharField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.name}"
+
+class GenericSectionContact(models.Model):
+    site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='sections_contact')
+
+    title = models.CharField(max_length=255)
+    description = RichTextField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.name}"
+
+class ContactAddresses(models.Model):
+    contact = models.ForeignKey(GenericSectionContact, on_delete=models.CASCADE, related_name='sections_address')
+
+    title = models.CharField(max_length=255)
+    description = RichTextField(blank=True, null=True)
+
+    tel = models.CharField(max_length=255)
+    tel_wp = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.name}"
+    
+class ContactMails(models.Model):
+    contact = models.ForeignKey(GenericSectionContact, on_delete=models.CASCADE, related_name='sections_mails')
+
+    mail = models.CharField(max_length=255)
+
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.name}"
+
+class GenericSectionWholesale(models.Model):
+    site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='sections_wholasale')
+
+    title = models.CharField(max_length=255)
+    description = RichTextField(blank=True, null=True)
+    info_text = RichTextField(blank=True, null=True)
+
+    image = models.FileField(upload_to='site/sections/wholasale', blank=True, null=True)
+    
+    # Butonlar
+    button_top_title = models.CharField(max_length=255, blank=True, null=True)
+    button_top_text = models.CharField(max_length=255, blank=True, null=True)
+    button_top_url = models.CharField(blank=True, null=True)
+    button_bottom_title = models.CharField(max_length=255, blank=True, null=True)
+    button_bottom_text = models.CharField(max_length=255, blank=True, null=True)
+    button_bottom_url = models.CharField(blank=True, null=True)
+
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.name}"
 
 class FooterPolicy(models.Model):
     site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='footer_policies')
@@ -92,6 +173,7 @@ class FooterInfo(models.Model):
     site = models.OneToOneField(SiteSettings, on_delete=models.CASCADE, related_name='footer_info')
     logo = models.FileField(upload_to='site/footer/', blank=True, null=True)
     footer_text = models.CharField(max_length=255, default='kitti.com.tr © 2025 - Tüm hakları saklıdır.')
+    social_text = models.CharField(max_length=255, default='Yenilikleri Kaçırmayın;')
 
     def __str__(self):
         return "Footer Info"

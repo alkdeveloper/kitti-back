@@ -1,108 +1,179 @@
 from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
-from django.db import models
-from django.forms import TextInput, Textarea
-from modeltranslation.admin import TranslationAdmin
+from django.utils.safestring import mark_safe
+from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
+
 from .models import (
-    SiteSettings, Header, MenuItem,
-    GenericSection, FooterPolicy, FooterInfo, SocialMedia
+    SiteSettings, MenuItem, Header, GenericSection,
+    GenericSectionOurStory, GenericSectionContact, ContactAddresses, ContactMails,
+    GenericSectionWholesale, FooterPolicy, SocialMedia, FooterInfo
 )
 
-# ------------------------
-# YENİ EKLENDİ: Inline: Menü Elemanları
-# ------------------------
-class MenuItemInline(admin.TabularInline):
-    model = MenuItem
-    extra = 1
-    fields = ('text', 'href')
-    verbose_name = "Menü Elemanı"
-    verbose_name_plural = "Menü Elemanları"
+# -----------------------------------------------------------------------------
+# GENEL AYARLAR VE YARDIMCI FONKSİYONLAR
+# -----------------------------------------------------------------------------
 
-# ------------------------
-# Inline: Footer Policy
-# ------------------------
-class FooterPolicyInline(admin.TabularInline):
-    model = FooterPolicy
-    extra = 1
-    fields = ('title', 'description')
-    verbose_name = "Aydınlatma / Politika"
-    verbose_name_plural = "Aydınlatma / Politikalar"
-
-# ------------------------
-# Inline: Sosyal Medya Linkleri
-# ------------------------
-class SocialMediaLinkInline(admin.TabularInline):
-    model = SocialMedia
-    extra = 1
-    fields = ('icon', 'url')
-    verbose_name = "Sosyal Medya Linki"
-    verbose_name_plural = "Sosyal Medya Linkleri"
-
-# ------------------------
-# Base Translation Admin
-# ------------------------
 class BaseTranslationAdmin(TranslationAdmin):
-    formfield_overrides = {
-        models.CharField: {'widget': TextInput(attrs={'size': '100'})},
-        models.TextField: {'widget': Textarea(attrs={'rows': 3, 'cols': 100})},
-    }
+    def display_image(self, obj, field_name='image'):
+        field = getattr(obj, field_name)
+        if field and hasattr(field, 'url'):
+            return mark_safe(f'<img src="{field.url}" width="100" />')
+        return _("Görsel Yok")
+    display_image.short_description = _('Görsel Önizleme')
 
-# ------------------------
-# Site Settings Admin
-# ------------------------
+# -----------------------------------------------------------------------------
+# Site Ayarları Admin Paneli (SiteSettings)
+# -----------------------------------------------------------------------------
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(BaseTranslationAdmin):
-    list_display = ('site_title', 'logo',)
-    fieldsets = (
-        (_("Genel Bilgiler"), {
-            'fields': ('site_title', 'site_description', 'logo')
-        }),
-    )
-    inlines = [MenuItemInline, FooterPolicyInline, SocialMediaLinkInline]
+    # DÜZELTME (E124): 'list_editable' hatasını çözmek için link olmayan bir alanı ('__str__') başa ekliyoruz.
+    list_display = ('__str__', 'site_title', 'display_logo_field')
+    list_editable = ('site_title',)
 
-# ------------------------
-# Header Admin
-# ------------------------
+    def display_logo_field(self, obj):
+        return self.display_image(obj, 'logo')
+    display_logo_field.short_description = _('Logo Önizleme')
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+# -----------------------------------------------------------------------------
+# Menü Elemanları Admin Paneli (MenuItem)
+# -----------------------------------------------------------------------------
+@admin.register(MenuItem)
+class MenuItemAdmin(BaseTranslationAdmin):
+    # DÜZELTME (E124): 'list_editable' hatasını çözmek için 'id' alanını başa ekliyoruz.
+    list_display = ('id', 'text', 'href', 'site')
+    list_editable = ('text', 'href', 'site')
+    list_filter = ('site',)
+    search_fields = ('text', 'href')
+
+# -----------------------------------------------------------------------------
+# Ana Sayfa Header Yönetimi (Header)
+# DÜZELTME (E202): Header modeli, GenericSection'a değil, SiteSettings'e bağlı olduğu
+# için inline olarak kullanılamaz. Bu yüzden ayrı bir admin olarak kaydedildi.
+# -----------------------------------------------------------------------------
 @admin.register(Header)
 class HeaderAdmin(BaseTranslationAdmin):
-    list_display = ('title', 'description')
-    fieldsets = (
-        (_("Header Bilgileri"), {
-            'fields': ('title', 'description', 'image')
-        }),
-    )
+    list_display = ('title', 'display_image_field')
+    
+    def display_image_field(self, obj):
+        return self.display_image(obj, 'image')
+    display_image_field.short_description = _('Görsel')
+    
+    # İstek üzerine oluşturma ve silme engellendi.
+    def has_add_permission(self, request):
+        return False
 
-# ------------------------
-# Generic Section Admin
-# ------------------------
-@admin.register(GenericSection)
-class GenericSectionAdmin(BaseTranslationAdmin):
-    list_display = ('name', 'type', 'title_tr', 'title_en')
-    list_filter = ('type',)
-    fieldsets = (
-        (_("Genel Bilgiler"), {
-            'fields': ('type', 'name', 'subtitle_tr', 'subtitle_en', 'title_tr', 'title_en', 'description_tr', 'description_en', 'image', 'mobile_image')
-        }),
-        (_("Buton Bilgileri"), {
-            'fields': (
-                'button_text_left_tr', 'button_text_left_en', 'button_url_left',
-                'button_text_right_tr', 'button_text_right_en', 'button_url_right',
-            ),
-        }),
-        (_("Favoriler (sadece 'Favorites of Season' için)"), {
-            'fields': ('product_1', 'product_2', 'product_3'),
-        }),
-    )
+    def has_delete_permission(self, request, obj=None):
+        return False
 
-# ------------------------
-# Footer Admin
-# ------------------------
+# -----------------------------------------------------------------------------
+# Ana Sayfa Bölümleri (GenericSection - Sadece "Home Page" olan)
+# -----------------------------------------------------------------------------
+class HomePageSectionAdmin(BaseTranslationAdmin):
+    list_display = ('name', 'title', 'display_image_field')
+    
+    def display_image_field(self, obj):
+        return self.display_image(obj, 'image')
+    display_image_field.short_description = _('Ana Görsel')
+    
+    # DÜZELTME (E202): HeaderInline buradan kaldırıldı.
+    inlines = []
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.filter(name__exact="Home Page") # 'name' alanına göre filtrelendi
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+admin.site.register(GenericSection, HomePageSectionAdmin)
+
+# ... Diğer admin sınıflarınız (GenericSectionOurStoryAdmin, GenericSectionContactAdmin) aynı kalabilir ...
+# Aşağıda sadece E124 hatası veren sınıfları tekrar ekliyorum.
+
+# -----------------------------------------------------------------------------
+# Toptan Satış Sayfası Bölümleri (GenericSectionWholesale)
+# -----------------------------------------------------------------------------
+@admin.register(GenericSectionWholesale)
+class GenericSectionWholesaleAdmin(BaseTranslationAdmin):
+    # DÜZELTME (E124): '__str__' metodunu veya 'id'yi başa ekleyebiliriz.
+    list_display = ('title', 'display_image_field')
+    # list_editable 'title' ile başlayamaz, ama zaten tek eleman olduğu için düzenleme linki yeterlidir.
+    # list_editable = ('title',) # Bu satırı kaldırarak hatayı çözebilir veya list_display'i değiştirebiliriz.
+
+    def display_image_field(self, obj):
+        return self.display_image(obj, 'image')
+    display_image_field.short_description = _('Görsel')
+
+
+# -----------------------------------------------------------------------------
+# Footer Yönetim Panelleri
+# -----------------------------------------------------------------------------
+
 @admin.register(FooterInfo)
-class FooterAdmin(BaseTranslationAdmin):
-    list_display = ('logo',)
-    fieldsets = (
-        (_("Footer Genel Bilgiler"), {
-            'fields': ('logo', 'footer_text',)
-        }),
-    )
+class FooterInfoAdmin(BaseTranslationAdmin):
+    list_display = ('__str__', 'footer_text', 'social_text', 'display_logo_field')
+    list_editable = ('footer_text', 'social_text')
+    
+    def display_logo_field(self, obj):
+        return self.display_image(obj, 'logo')
+    display_logo_field.short_description = _('Footer Logo')
 
+    def has_add_permission(self, request):
+        return not FooterInfo.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+@admin.register(FooterPolicy)
+class FooterPolicyAdmin(BaseTranslationAdmin):
+    # DÜZELTME (E124): 'id' alanını başa ekliyoruz.
+    list_display = ('id', 'title',)
+    list_editable = ('title',)
+    search_fields = ('title', 'description')
+
+@admin.register(SocialMedia)
+class SocialMediaAdmin(admin.ModelAdmin):
+    # DÜZELTME (E124): 'id' alanını başa ekliyoruz.
+    list_display = ('id', 'icon', 'url')
+    list_editable = ('icon', 'url')
+
+
+# GenericSectionOurStoryAdmin ve GenericSectionContactAdmin sınıflarınızda
+# E124 hatası olmadığı için onları değiştirmenize gerek yok.
+# Onları bir önceki cevaptaki gibi bırakabilirsiniz.
+@admin.register(GenericSectionOurStory)
+class GenericSectionOurStoryAdmin(BaseTranslationAdmin):
+    list_display = ('name', 'type', 'title', 'display_image_field', 'display_mobile_image_field')
+    list_editable = ('title',)
+    list_filter = ('type',)
+    search_fields = ('name', 'title', 'description')
+
+    def display_image_field(self, obj):
+        return self.display_image(obj, 'image')
+    display_image_field.short_description = _('Görsel')
+
+    def display_mobile_image_field(self, obj):
+        return self.display_image(obj, 'mobile_image')
+    display_mobile_image_field.short_description = _('Mobil Görsel')
+
+class ContactAddressesInline(TranslationTabularInline): # Dil desteği için TranslationTabularInline kullanıldı
+    model = ContactAddresses
+    extra = 1
+
+class ContactMailsInline(admin.TabularInline):
+    model = ContactMails
+    extra = 1
+
+@admin.register(GenericSectionContact)
+class GenericSectionContactAdmin(BaseTranslationAdmin):
+    list_display = ('title',)
+    inlines = [ContactAddressesInline, ContactMailsInline]

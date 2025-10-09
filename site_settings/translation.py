@@ -1,7 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models import (
-    SiteSettings, Header,
-    GenericSection, FooterPolicy, FooterInfo, MenuItem
+    SiteSettings, Header, GenericSectionOurStory, GenericSectionContact,
+    GenericSection, FooterPolicy, FooterInfo, MenuItem, ContactAddresses, GenericSectionWholesale
 )
 
 @register(MenuItem)
@@ -29,8 +29,39 @@ class GenericSectionTranslationOptions(TranslationOptions):
 
 @register(FooterPolicy)
 class FooterPolicyTranslationOptions(TranslationOptions):
-    fields = ('title', 'description',)
+    fields = ('title', 'description')
 
 @register(FooterInfo)
 class FooterInfoTranslationOptions(TranslationOptions):
-    fields = ('footer_text',)
+    fields = ('footer_text', 'social_text')
+
+@register(GenericSectionOurStory)
+class GenericSectionOurStoryTranslationOptions(TranslationOptions):
+    fields = (
+        'name',
+        'subtitle',
+        'title',
+        'description',
+        'subimage', # Bu alanın metin içerdiği varsayıldı
+        'button_text',
+    )
+
+@register(GenericSectionContact)
+class GenericSectionContactTranslationOptions(TranslationOptions):
+    fields = ('title', 'description',)
+
+@register(ContactAddresses)
+class ContactAddressesTranslationOptions(TranslationOptions):
+    fields = ('title', 'description',) # tel ve tel_wp alanları çevrilmez
+
+@register(GenericSectionWholesale)
+class GenericSectionWholesaleTranslationOptions(TranslationOptions):
+    fields = (
+        'title',
+        'description',
+        'info_text',
+        'button_top_title',
+        'button_top_text',
+        'button_bottom_title',
+        'button_bottom_text',
+    )
