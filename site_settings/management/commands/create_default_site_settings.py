@@ -224,8 +224,8 @@ class Command(BaseCommand):
                     'title_tr': "Bir grubun gücüyle", 'title_en': "With the power of a group",
                     'description_tr': "Kitti, 1978'den beri tekstil sektöründe faaliyet gösteren ALK Group'un markalarından biridir.\n\nALK Group; Kitti gibi bir çok markasıyla hem Türkiye'de hem dünyada milyonlara ulaşır.",
                     'description_en': "Kitti is one of the brands of ALK Group, which has been operating in the textile industry since 1978.\n\nALK Group reaches millions in both Turkey and around the world with its many brands like Kitti.",
-                    'subimage': 'alk-group.png',
                 },
+                'subimage': 'alk-group.png',
                 'image': 'Akal-Tekstil-2.png'
             },
             {
@@ -305,8 +305,8 @@ class Command(BaseCommand):
                     'title_tr': "Kitti ürünlerini satmak ister misiniz?", 'title_en': "Would you like to sell Kitti products?",
                     'button_text_tr': "Toptan Satış", 'button_text_en': "Wholesale",
                     'button_url': "/wholesale",
-                    'subimage': 'logo.svg',
                 },
+                'subimage': 'logo.svg',
                 'image': 'whole-sale.png'
             },
         ]
@@ -320,8 +320,8 @@ class Command(BaseCommand):
             if created:
                 if 'image' in section_data:
                     add_image_to_instance(section_obj, section_data['image'], field_name='image')
-                if 'mobile_image' in section_data: # mobile_image için de kontrol
-                    add_image_to_instance(section_obj, section_data['mobile_image'], field_name='mobile_image')
+                if 'subimage' in section_data: # subimage için de kontrol
+                    add_image_to_instance(section_obj, section_data['subimage'], field_name='subimage')
                 self.stdout.write(self.style.SUCCESS(f"✅ Our Story Section '{section_data['type']}' created."))
         
 
@@ -470,6 +470,25 @@ class Command(BaseCommand):
         SocialMedia.objects.get_or_create(site=site, icon="instagram", url="https://instagram.com")
 
         # === 🔟 Footer Info ===
-        FooterInfo.objects.get_or_create(site=site)
+        self.stdout.write("Updating or creating Footer Info...")
+        footer_info_obj, created = FooterInfo.objects.update_or_create(
+            site=site, # Bu alana göre objeyi bul veya oluştur
+            defaults={ # Bulunursa bu verilerle güncelle, bulunmazsa bu verilerle oluştur
+                'footer_text_tr': 'kitti.com.tr © 2025 - Tüm hakları saklıdır.',
+                'footer_text_en': 'kitti.com.tr © 2025 - All rights reserved.',
+                'social_text_tr': 'Yenilikleri Kaçırmayın;',
+                'social_text_en': "Don't miss the innovations;",
+            }
+        )
+
+        # Logoyu sadece obje ilk kez oluşturuluyorsa ve logosu yoksa ekle
+        if created and not footer_info_obj.logo:
+            # Not: Bu dosyanın 'static/site_data/' klasöründe olduğundan emin olun.
+            add_image_to_instance(footer_info_obj, "logo.svg", field_name='logo')
+            self.stdout.write(self.style.SUCCESS("✅ FooterInfo created with logo."))
+        elif created:
+            self.stdout.write(self.style.SUCCESS("✅ FooterInfo created."))
+        else:
+            self.stdout.write("✅ FooterInfo updated with default texts.")
 
         self.stdout.write(self.style.SUCCESS("✅ Default multilingual site settings created successfully with images."))

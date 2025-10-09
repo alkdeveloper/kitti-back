@@ -108,7 +108,7 @@ class GenericSectionOurStory(models.Model):
     title = models.CharField(max_length=255)
     description = RichTextField(blank=True, null=True)
 
-    subimage = models.CharField(max_length=255, blank=True, null=True)
+    subimage = models.FileField(upload_to='site/sections/our_story', blank=True, null=True)
     mobile_image = models.FileField(upload_to='site/sections/our_story', blank=True, null=True)
     image = models.FileField(upload_to='site/sections/our_story', blank=True, null=True)
     

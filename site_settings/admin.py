@@ -148,7 +148,7 @@ class SocialMediaAdmin(admin.ModelAdmin):
 # Onları bir önceki cevaptaki gibi bırakabilirsiniz.
 @admin.register(GenericSectionOurStory)
 class GenericSectionOurStoryAdmin(BaseTranslationAdmin):
-    list_display = ('name', 'type', 'title', 'display_image_field', 'display_mobile_image_field')
+    list_display = ('name', 'type', 'title', 'display_image_field', 'display_sub_image_field')
     list_editable = ('title',)
     list_filter = ('type',)
     search_fields = ('name', 'title', 'description')
@@ -157,9 +157,9 @@ class GenericSectionOurStoryAdmin(BaseTranslationAdmin):
         return self.display_image(obj, 'image')
     display_image_field.short_description = _('Görsel')
 
-    def display_mobile_image_field(self, obj):
-        return self.display_image(obj, 'mobile_image')
-    display_mobile_image_field.short_description = _('Mobil Görsel')
+    def display_sub_image_field(self, obj):
+        return self.display_image(obj, 'subimage')
+    display_sub_image_field.short_description = _('Üst Görsel')
 
 class ContactAddressesInline(TranslationTabularInline): # Dil desteği için TranslationTabularInline kullanıldı
     model = ContactAddresses
