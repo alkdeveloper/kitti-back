@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 from products.serializers import ProductSerializer
+from django.utils.translation import get_language
 
 # -----------------------------------------------------------------------------
 # YARDIMCI SERIALIZER'LAR (BAŞKA YERDE KULLANILACAK)
@@ -160,9 +161,13 @@ class SocialMediaSerializer(serializers.ModelSerializer):
 
 class FooterInfoSerializer(serializers.ModelSerializer):
     logo = serializers.SerializerMethodField()
+    # DÜZELTME: Çevrilecek alanları SerializerMethodField olarak tanımlıyoruz.
+    footer_text = serializers.SerializerMethodField()
+    social_text = serializers.SerializerMethodField()
 
     class Meta:
         model = FooterInfo
+        # Alanlar yukarıda tanımlandığı için bu liste doğru.
         fields = ['id', 'logo', 'footer_text', 'social_text']
 
     def get_logo(self, obj):
@@ -170,6 +175,20 @@ class FooterInfoSerializer(serializers.ModelSerializer):
         if obj.logo and hasattr(obj.logo, 'url'):
             return request.build_absolute_uri(obj.logo.url) if request else obj.logo.url
         return None
+
+    # YENİ EKLENDİ: Aktif dile göre footer_text'i getiren metod.
+    def get_footer_text(self, obj):
+        lang = get_language() # View'da activate() ile ayarlanan aktif dili alır.
+        if lang == 'en' and hasattr(obj, 'footer_text_en'):
+            return obj.footer_text_en or obj.footer_text_tr # İngilizce yoksa Türkçe'ye fallback
+        return obj.footer_text_tr or obj.footer_text_en
+
+    # YENİ EKLENDİ: Aktif dile göre social_text'i getiren metod.
+    def get_social_text(self, obj):
+        lang = get_language()
+        if lang == 'en' and hasattr(obj, 'social_text_en'):
+            return obj.social_text_en or obj.social_text_tr
+        return obj.social_text_tr or obj.social_text_en
 
 # -----------------------------------------------------------------------------
 # ANA KAPSAYICI SERIALIZER (SITE SETTINGS)
