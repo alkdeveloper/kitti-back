@@ -286,5 +286,5 @@ python manage.py run --skip-static
 *Excellence in Software Development*
 
 [![BOSOFT](https://img.shields.io/badge/BOSOFT-Professional%20Software%20Solutions-red.svg?style=for-the-badge)](https://bionluk.com/bologo)
-
+https://bionluk.com/orders/2191240 iş teslimidir.
 </div>
