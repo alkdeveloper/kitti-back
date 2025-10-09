@@ -37,8 +37,8 @@ class SiteSettingsAdmin(BaseTranslationAdmin):
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
 # -----------------------------------------------------------------------------
 # Menü Elemanları Admin Paneli (MenuItem)
@@ -68,12 +68,13 @@ class HeaderAdmin(BaseTranslationAdmin):
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
 # -----------------------------------------------------------------------------
 # Ana Sayfa Bölümleri (GenericSection - Sadece "Home Page" olan)
 # -----------------------------------------------------------------------------
+@admin.register(GenericSection)
 class HomePageSectionAdmin(BaseTranslationAdmin):
     list_display = ('name', 'title', 'display_image_field')
     
@@ -84,17 +85,12 @@ class HomePageSectionAdmin(BaseTranslationAdmin):
     # DÜZELTME (E202): HeaderInline buradan kaldırıldı.
     inlines = []
 
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(name__exact="Home Page") # 'name' alanına göre filtrelendi
-
     def has_add_permission(self, request):
         return False
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
-admin.site.register(GenericSection, HomePageSectionAdmin)
 
 # ... Diğer admin sınıflarınız (GenericSectionOurStoryAdmin, GenericSectionContactAdmin) aynı kalabilir ...
 # Aşağıda sadece E124 hatası veren sınıfları tekrar ekliyorum.
@@ -130,8 +126,8 @@ class FooterInfoAdmin(BaseTranslationAdmin):
     def has_add_permission(self, request):
         return not FooterInfo.objects.exists()
 
-    def has_delete_permission(self, request, obj=None):
-        return False
+    # def has_delete_permission(self, request, obj=None):
+    #     return False
 
 @admin.register(FooterPolicy)
 class FooterPolicyAdmin(BaseTranslationAdmin):

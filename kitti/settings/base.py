@@ -162,20 +162,20 @@ JAZZMIN_SETTINGS = {
     "site_title": "Kitti Admin",
     "site_header": "Kitti",
     "site_brand": "Kitti Management",
-    "site_logo": "admin/images/kitti-logo.svg",  # SVG logo
-    "login_logo": "admin/images/kitti-logo.svg",  # Login sayfası için
+    "site_logo": "admin/images/kitti-logo.svg",
+    "login_logo": "admin/images/kitti-logo.svg",
     "login_logo_dark": None,
     "site_logo_classes": "img-fluid",
     "site_icon": "admin/images/kitti-logo.svg",
     
     # Welcome text
-    "welcome_sign": "Kitti Admin Panel'e Hoş Geldiniz",
+    "welcome_sign": "Kitti Admin Paneline Hoş Geldiniz",
     "copyright": "Kitti",
     
     # Search model
     "search_model": ["products.Item"],
     
-    # Field name on user model that contains avatar
+    # User model avatar
     "user_avatar": None,
     
     ############
@@ -204,26 +204,41 @@ JAZZMIN_SETTINGS = {
     "hide_apps": [],
     "hide_models": ["auth.Group"],
     
-    # List of apps (and/or models) to base side menu ordering off of
-    "order_with_respect_to": ["auth", "products"],
+    # GÜNCELLENDİ: Uygulama ve model sıralaması
+    "order_with_respect_to": [
+        "site_settings", # Sözlük yerine sadece app adı yazıldı
+        "products",
+        "auth",
+    ],
     
-    # Custom icons for side menu apps/models
+    # GÜNCELLENDİ: Yeni ikonlar eklendi
     "icons": {
+        # Mevcut ikonlar
         "auth": "fas fa-users-cog",
         "auth.user": "fas fa-user",
-        "auth.Group": "fas fa-users",
         "products": "fas fa-shopping-cart",
         "products.Item": "fas fa-boxes",
         "products.ItemImage": "fas fa-images",
+
+        # Site Yönetimi için yeni ikonlar
+        "site_settings": "fas fa-cogs",
+        "site_settings.SiteSettings": "fas fa-tools",
+        "site_settings.MenuItem": "fas fa-bars",
+        "site_settings.Header": "fas fa-desktop",
+        "site_settings.GenericSection": "fas fa-puzzle-piece",
+        "site_settings.GenericSectionOurStory": "fas fa-book-open",
+        "site_settings.GenericSectionContact": "fas fa-map-marker-alt",
+        "site_settings.GenericSectionWholesale": "fas fa-truck-loading",
+        "site_settings.FooterInfo": "fas fa-info-circle",
+        "site_settings.FooterPolicy": "fas fa-file-contract",
+        "site_settings.SocialMedia": "fas fa-share-alt",
     },
     
-    # Icons that are used when one is not manually specified
+    # Default icons
     "default_icon_parents": "fas fa-chevron-circle-right",
     "default_icon_children": "fas fa-circle",
     
-    #################
-    # Related Modal #
-    #################
+    # Related Modal
     "related_modal_active": False,
     
     #############
@@ -234,9 +249,7 @@ JAZZMIN_SETTINGS = {
     "use_google_fonts_cdn": True,
     "show_ui_builder": True,
     
-    ###############
-    # Change view #
-    ###############
+    # Change view
     "changeform_format": "horizontal_tabs",
     "changeform_format_overrides": {
         "auth.user": "collapsible", 

@@ -8,6 +8,10 @@ class SiteSettings(models.Model):
     site_title = models.CharField(max_length=255)
     site_description = RichTextField(blank=True, null=True)
 
+    class Meta:
+        verbose_name = "Genel Site Ayarı"
+        verbose_name_plural = "Genel Site Ayarları"
+
     def __str__(self):
         return self.site_title
 
@@ -16,6 +20,11 @@ class MenuItem(models.Model):
     site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='menu_items')
     href = models.CharField(max_length=255)
     text = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ['id']
+        verbose_name = "Menü Elemanı"
+        verbose_name_plural = "Menü Elemanları"
 
     class Meta:
         ordering = ['id']
@@ -29,6 +38,10 @@ class Header(models.Model):
     title = models.CharField(max_length=255)
     description = RichTextField(blank=True, null=True)
     image = models.FileField(upload_to='site/header/', blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Ana Sayfa Header"
+        verbose_name_plural = "Ana Sayfa Header Ayarları"
 
     def __str__(self):
         return f"Header: {self.title}"
@@ -66,6 +79,10 @@ class GenericSection(models.Model):
     product_2 = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
     product_3 = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
 
+    class Meta:
+        verbose_name = "Ana Sayfa Bölümü"
+        verbose_name_plural = "Ana Sayfa Bölüm Ayarları"
+
     def __str__(self):
         return f"{self.get_type_display()} - {self.name}"
 
@@ -78,7 +95,7 @@ class GenericSectionOurStory(models.Model):
         ('best_selling_accessories', "Best Selling Accessories"),
         ('health_and_quality', 'Health and Quality'),
         ('safe_facilities', 'Safe Facilities'),
-        ('Harmless Materials', 'Harmless Materials'),
+        ('harmless_materials', 'Harmless Materials'),
         ('growing_safely', 'Growing Safely'),
         ('kitti_products', 'Kitti Products'),
     ]
@@ -99,6 +116,10 @@ class GenericSectionOurStory(models.Model):
     button_text = models.CharField(max_length=255, blank=True, null=True)
     button_url = models.CharField(blank=True, null=True)
 
+    class Meta:
+        verbose_name = "Hikayemiz Sayfası Bölümü"
+        verbose_name_plural = "Hikayemiz Sayfası Bölümleri"
+
     def __str__(self):
         return f"{self.get_type_display()} - {self.name}"
 
@@ -108,8 +129,12 @@ class GenericSectionContact(models.Model):
     title = models.CharField(max_length=255)
     description = RichTextField(blank=True, null=True)
 
+    class Meta:
+        verbose_name = "İletişim Sayfası Ayarı"
+        verbose_name_plural = "İletişim Sayfası Ayarları"
+
     def __str__(self):
-        return f"{self.get_type_display()} - {self.name}"
+        return f"{self.title}"
 
 class ContactAddresses(models.Model):
     contact = models.ForeignKey(GenericSectionContact, on_delete=models.CASCADE, related_name='sections_address')
@@ -121,7 +146,7 @@ class ContactAddresses(models.Model):
     tel_wp = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.get_type_display()} - {self.name}"
+        return f"{self.title}"
     
 class ContactMails(models.Model):
     contact = models.ForeignKey(GenericSectionContact, on_delete=models.CASCADE, related_name='sections_mails')
@@ -129,7 +154,7 @@ class ContactMails(models.Model):
     mail = models.CharField(max_length=255)
 
     def __str__(self):
-        return f"{self.get_type_display()} - {self.name}"
+        return f"{self.mail}"
 
 class GenericSectionWholesale(models.Model):
     site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='sections_wholasale')
@@ -148,13 +173,21 @@ class GenericSectionWholesale(models.Model):
     button_bottom_text = models.CharField(max_length=255, blank=True, null=True)
     button_bottom_url = models.CharField(blank=True, null=True)
 
+    class Meta:
+        verbose_name = "Toptan Satış Sayfası Ayarı"
+        verbose_name_plural = "Toptan Satış Sayfası Ayarları"
+
     def __str__(self):
-        return f"{self.get_type_display()} - {self.name}"
+        return f"{self.title}"
 
 class FooterPolicy(models.Model):
     site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='footer_policies')
     title = models.CharField(max_length=255)
     description = RichTextField(blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Politika"
+        verbose_name_plural = "Politika Ayarları"
 
     def __str__(self):
         return self.title
@@ -165,6 +198,10 @@ class SocialMedia(models.Model):
     icon = models.CharField(max_length=50)
     url = models.URLField()
 
+    class Meta:
+        verbose_name = "Sosyal Medya Linki"
+        verbose_name_plural = "Sosyal Medya Linkleri"
+
     def __str__(self):
         return self.icon
 
@@ -174,6 +211,10 @@ class FooterInfo(models.Model):
     logo = models.FileField(upload_to='site/footer/', blank=True, null=True)
     footer_text = models.CharField(max_length=255, default='kitti.com.tr © 2025 - Tüm hakları saklıdır.')
     social_text = models.CharField(max_length=255, default='Yenilikleri Kaçırmayın;')
+
+    class Meta:
+        verbose_name = "Footer Bilgisi"
+        verbose_name_plural = "Footer Bilgi Ayarları"
 
     def __str__(self):
         return "Footer Info"
