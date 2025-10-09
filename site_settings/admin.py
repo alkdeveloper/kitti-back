@@ -46,8 +46,8 @@ class SiteSettingsAdmin(BaseTranslationAdmin):
         return self.display_image(obj, 'favicon')
     display_favicon_field.short_description = 'Favicon Önizleme'
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 # -----------------------------------------------------------------------------
 # Menü Elemanları Admin Paneli (MenuItem)
@@ -77,8 +77,8 @@ class HeaderAdmin(BaseTranslationAdmin):
     def has_add_permission(self, request):
         return False
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 # -----------------------------------------------------------------------------
 # Ana Sayfa Bölümleri (GenericSection - Sadece "Home Page" olan)
@@ -97,8 +97,8 @@ class HomePageSectionAdmin(BaseTranslationAdmin):
     def has_add_permission(self, request):
         return False
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 # ... Diğer admin sınıflarınız (GenericSectionOurStoryAdmin, GenericSectionContactAdmin) aynı kalabilir ...
@@ -135,8 +135,8 @@ class FooterInfoAdmin(BaseTranslationAdmin):
     def has_add_permission(self, request):
         return not FooterInfo.objects.exists()
 
-    # def has_delete_permission(self, request, obj=None):
-    #     return False
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 @admin.register(FooterPolicy)
 class FooterPolicyAdmin(BaseTranslationAdmin):

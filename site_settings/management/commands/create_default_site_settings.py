@@ -14,6 +14,9 @@ class Command(BaseCommand):
 
     def handle(self, *args, **kwargs):
         # === 1️⃣ Site Settings ===
+        if SiteSettings.objects.exists():
+            self.stdout.write(self.style.SUCCESS("✅ Site already have, skipped."))
+            return
         site, created = SiteSettings.objects.get_or_create(
             site_title="Kitti",
             site_description="<b>Hoş geldiniz!</b> Kitti dünyasına adım atın.",

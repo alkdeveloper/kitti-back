@@ -88,6 +88,8 @@ class Command(BaseCommand):
         
         # 4. Create superuser
         self.create_superuser()
+
+        call_command('create_default_site_settings')
         
         # 5. Create fake data (sadece istenirse ve henüz yoksa)
         if self.fake_data_requested:
