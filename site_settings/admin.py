@@ -26,16 +26,25 @@ class BaseTranslationAdmin(TranslationAdmin):
 # -----------------------------------------------------------------------------
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(BaseTranslationAdmin):
-    # DÜZELTME (E124): 'list_editable' hatasını çözmek için link olmayan bir alanı ('__str__') başa ekliyoruz.
-    list_display = ('__str__', 'site_title', 'display_logo_field')
+    # 'favicon' için de bir önizleme alanı ekliyoruz.
+    list_display = ('__str__', 'site_title', 'display_logo_field', 'display_favicon_field')
     list_editable = ('site_title',)
+
+    # Mevcut fieldset'e 'favicon'ı ekliyoruz.
+    fieldsets = (
+        ("Genel Bilgiler", {
+            'fields': ('site_title', 'site_description', 'logo', 'favicon')
+        }),
+    )
 
     def display_logo_field(self, obj):
         return self.display_image(obj, 'logo')
-    display_logo_field.short_description = _('Logo Önizleme')
+    display_logo_field.short_description = 'Logo Önizleme'
 
-    def has_add_permission(self, request):
-        return False
+    # Favicon için yeni önizleme fonksiyonu
+    def display_favicon_field(self, obj):
+        return self.display_image(obj, 'favicon')
+    display_favicon_field.short_description = 'Favicon Önizleme'
 
     # def has_delete_permission(self, request, obj=None):
     #     return False

@@ -194,7 +194,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
         fields = [
-            'id', 'logo', 'site_title', 'site_description',
+            'id', 'logo', 'favicon', 'site_title', 'site_description',
             'menu_items', 'headers', 'sections',
             'footer_policies', 'social_links', 'footer_info',
             # Yeni alanları da ana serializer'a ekliyoruz

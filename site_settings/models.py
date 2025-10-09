@@ -5,6 +5,12 @@ from products.models import Item  # 3 ürün seçmek için kullanılacak
 
 class SiteSettings(models.Model):
     logo = models.FileField(upload_to='site/logo/', blank=True, null=True)
+    favicon = models.FileField(
+        upload_to='site/favicon/', 
+        blank=True, 
+        null=True, 
+        help_text="Site ikonu (favicon). Genellikle .ico, .png veya .svg formatında olur."
+    )
     site_title = models.CharField(max_length=255)
     site_description = RichTextField(blank=True, null=True)
 
