@@ -96,12 +96,21 @@ class GenericSectionOurStorySerializer(serializers.ModelSerializer):
 class ContactAddressesSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactAddresses
-        exclude = ['contact'] # Üst modelin ID'sini tekrar göstermeye gerek yok
+        fields = [
+            'id', 
+            'title', 
+            'description', 
+            'tel',
+            'tel_wp',
+        ]
 
 class ContactMailsSerializer(serializers.ModelSerializer):
     class Meta:
         model = ContactMails
-        exclude = ['contact']
+        fields = [
+            'id', 
+            'mail',
+        ]
 
 class GenericSectionContactSerializer(serializers.ModelSerializer):
     # İlişkili adresleri ve mailleri burada iç içe gösteriyoruz
@@ -142,7 +151,7 @@ class GenericSectionWholesaleSerializer(serializers.ModelSerializer):
 class FooterPolicySerializer(serializers.ModelSerializer):
     class Meta:
         model = FooterPolicy
-        fields = ['id', 'title', 'description'] # social_text kaldırıldı (FooterInfo'ya taşındı)
+        fields = ['id', 'title', 'description']
 
 class SocialMediaSerializer(serializers.ModelSerializer):
     class Meta:

@@ -19,6 +19,14 @@ ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=[])
 DJANGO_SUPERUSER_USERNAME = env("DJANGO_SUPERUSER_USERNAME", default="admin")
 DJANGO_SUPERUSER_PASSWORD = env("DJANGO_SUPERUSER_PASSWORD", default="admin123")
 DJANGO_SUPERUSER_EMAIL = env("DJANGO_SUPERUSER_EMAIL", default="admin@example.com")
+FERNET_KEY = env("FERNET_KEY", default="e8s4gyWp10mHXMFKOTWG3ALmWcq2Q0UOaxsR30ebiBE=")
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")
+EMAIL_HOST = env("EMAIL_HOST", default="smtp.gmail.com")
+EMAIL_PORT = env("EMAIL_PORT", default="587")
+EMAIL_USE_TLS = env("EMAIL_USE_TLS", default="True")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="example@gmail.com")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default="onal tıha neli sifr")
+RECIEPENT_EMAIL = env("RECIEPENT_EMAIL", default="example@gmail.com")
 
 # Application definition
 INSTALLED_APPS = [
@@ -38,10 +46,12 @@ INSTALLED_APPS = [
     "adminsortable2",
     "mptt",
     "ckeditor",
+    'cryptography',
     
     # Django App
     "products",
     "site_settings",
+    'contacts',
 ]
 
 LANGUAGES = [
@@ -207,6 +217,7 @@ JAZZMIN_SETTINGS = {
     # GÜNCELLENDİ: Uygulama ve model sıralaması
     "order_with_respect_to": [
         "site_settings", # Sözlük yerine sadece app adı yazıldı
+        "contacts",
         "products",
         "auth",
     ],
@@ -256,39 +267,6 @@ JAZZMIN_SETTINGS = {
         "auth.group": "vertical_tabs"
     },
 }
-
-# JAZZMIN_UI_TWEAKS = {
-#     "navbar_small_text": False,
-#     "footer_small_text": False,
-#     "body_small_text": False,
-#     "brand_small_text": False,
-#     "brand_colour": False,
-#     "accent": "accent-primary",
-#     "navbar": "navbar-dark",
-#     "no_navbar_border": False,
-#     "navbar_fixed": True,
-#     "layout_boxed": False,
-#     "footer_fixed": True,
-#     "sidebar_fixed": False,
-#     "sidebar": "sidebar-dark-primary",
-#     "sidebar_nav_small_text": False,
-#     "sidebar_disable_expand": False,
-#     "sidebar_nav_child_indent": False,
-#     "sidebar_nav_compact_style": False,
-#     "sidebar_nav_legacy_style": True,
-#     "sidebar_nav_flat_style": True,
-#     "theme": "cyborg",
-#     "dark_mode_theme": "None",
-#     "button_classes": {
-#         "primary": "btn-primary",
-#         "secondary": "btn-secondary",
-#         "info": "btn-info",
-#         "warning": "btn-warning",
-#         "danger": "btn-danger",
-#         "success": "btn-success"
-#     },
-#     "actions_sticky_top": False
-# }
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
