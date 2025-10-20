@@ -67,38 +67,27 @@ class MenuItemAdmin(BaseTranslationAdmin):
 # -----------------------------------------------------------------------------
 @admin.register(Header)
 class HeaderAdmin(BaseTranslationAdmin):
-    list_display = ('title', 'display_image_field')
+    list_display = ('id', 'title', 'display_image_field')
+    list_editable = ('title',)
+    search_fields = ('title', 'description')
     
     def display_image_field(self, obj):
         return self.display_image(obj, 'image')
     display_image_field.short_description = _('Görsel')
-    
-    # İstek üzerine oluşturma ve silme engellendi.
-    def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
 
 # -----------------------------------------------------------------------------
 # Ana Sayfa Bölümleri (GenericSection - Sadece "Home Page" olan)
 # -----------------------------------------------------------------------------
 @admin.register(GenericSection)
 class HomePageSectionAdmin(BaseTranslationAdmin):
-    list_display = ('name', 'title', 'display_image_field')
+    list_display = ('id', 'name', 'type', 'title', 'display_image_field')
+    list_editable = ('title',)
+    list_filter = ('type',)
+    search_fields = ('name', 'title', 'description')
     
     def display_image_field(self, obj):
         return self.display_image(obj, 'image')
     display_image_field.short_description = _('Ana Görsel')
-    
-    # DÜZELTME (E202): HeaderInline buradan kaldırıldı.
-    inlines = []
-
-    def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
 
 
 # ... Diğer admin sınıflarınız (GenericSectionOurStoryAdmin, GenericSectionContactAdmin) aynı kalabilir ...
