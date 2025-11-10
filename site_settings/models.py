@@ -199,7 +199,7 @@ class FooterPolicy(models.Model):
 class SocialMedia(models.Model):
     site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='social_links')
     icon = models.CharField(max_length=50)
-    url = models.URLField()
+    url = models.CharField(max_length=500)  # URLField yerine CharField - "#" gibi değerler için
 
     class Meta:
         verbose_name = "Sosyal Medya Linki"
@@ -221,4 +221,20 @@ class FooterInfo(models.Model):
 
     def __str__(self):
         return "Footer Info"
+
+
+class FAQItem(models.Model):
+    """Sıkça Sorulan Sorular (FAQ) Modeli"""
+    site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='faq_items')
+    question = models.CharField(max_length=500)
+    answer = RichTextField()
+    order = models.IntegerField(default=0, help_text="Sıralama için kullanılır")
+
+    class Meta:
+        verbose_name = "FAQ Öğesi"
+        verbose_name_plural = "FAQ Öğeleri"
+        ordering = ['order', 'id']
+
+    def __str__(self):
+        return self.question
 

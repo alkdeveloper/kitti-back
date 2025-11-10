@@ -106,7 +106,7 @@ class ItemImage(models.Model):
 # ------------------------
 class Slider(MPTTModel):
     title = models.CharField(max_length=255, blank=True, null=True)
-    image = models.ImageField(upload_to='sliders/')
+    image = models.ImageField(upload_to='sliders/', blank=True, null=True)
     parent = TreeForeignKey(
         'self',
         on_delete=models.CASCADE,

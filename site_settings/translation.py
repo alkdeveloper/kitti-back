@@ -1,7 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models import (
     SiteSettings, Header, GenericSectionOurStory, GenericSectionContact,
-    GenericSection, FooterPolicy, FooterInfo, MenuItem, ContactAddresses, GenericSectionWholesale
+    GenericSection, FooterPolicy, FooterInfo, MenuItem, ContactAddresses, GenericSectionWholesale, FAQItem
 )
 
 @register(MenuItem)
@@ -65,4 +65,8 @@ class GenericSectionWholesaleTranslationOptions(TranslationOptions):
         'button_bottom_title',
         'button_bottom_text',
     )
+
+@register(FAQItem)
+class FAQItemTranslationOptions(TranslationOptions):
+    fields = ('question', 'answer',)
 

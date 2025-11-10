@@ -6,7 +6,7 @@ from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
 from .models import (
     SiteSettings, MenuItem, Header, GenericSection,
     GenericSectionOurStory, GenericSectionContact, ContactAddresses, ContactMails,
-    GenericSectionWholesale, FooterPolicy, SocialMedia, FooterInfo
+    GenericSectionWholesale, FooterPolicy, SocialMedia, FooterInfo, FAQItem
 )
 
 # -----------------------------------------------------------------------------
@@ -171,4 +171,15 @@ class ContactMailsInline(admin.TabularInline):
 class GenericSectionContactAdmin(BaseTranslationAdmin):
     list_display = ('title',)
     inlines = [ContactAddressesInline, ContactMailsInline]
+
+# -----------------------------------------------------------------------------
+# FAQ (Sıkça Sorulan Sorular) Admin Paneli
+# -----------------------------------------------------------------------------
+@admin.register(FAQItem)
+class FAQItemAdmin(BaseTranslationAdmin):
+    list_display = ('id', 'question', 'order')
+    list_editable = ('order',)
+    list_filter = ('site',)
+    search_fields = ('question', 'answer')
+    ordering = ['order', 'id']
 
