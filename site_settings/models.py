@@ -73,9 +73,9 @@ class GenericSection(models.Model):
     
     # Butonlar
     button_text_left = models.CharField(max_length=255, blank=True, null=True)
-    button_url_left = models.CharField(blank=True, null=True)
+    button_url_left = models.CharField(max_length=500, blank=True, null=True)
     button_text_right = models.CharField(max_length=255, blank=True, null=True)
-    button_url_right = models.CharField(blank=True, null=True)
+    button_url_right = models.CharField(max_length=500, blank=True, null=True)
 
     # Favoriler için
     product_1 = models.ForeignKey(Item, on_delete=models.SET_NULL, null=True, blank=True, related_name='+')
@@ -117,7 +117,7 @@ class GenericSectionOurStory(models.Model):
     
     # Butonlar
     button_text = models.CharField(max_length=255, blank=True, null=True)
-    button_url = models.CharField(blank=True, null=True)
+    button_url = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
         verbose_name = "Hikayemiz Sayfası Bölümü"
@@ -171,10 +171,10 @@ class GenericSectionWholesale(models.Model):
     # Butonlar
     button_top_title = models.CharField(max_length=255, blank=True, null=True)
     button_top_text = models.CharField(max_length=255, blank=True, null=True)
-    button_top_url = models.CharField(blank=True, null=True)
+    button_top_url = models.CharField(max_length=500, blank=True, null=True)
     button_bottom_title = models.CharField(max_length=255, blank=True, null=True)
     button_bottom_text = models.CharField(max_length=255, blank=True, null=True)
-    button_bottom_url = models.CharField(blank=True, null=True)
+    button_bottom_url = models.CharField(max_length=500, blank=True, null=True)
 
     class Meta:
         verbose_name = "Toptan Satış Sayfası Ayarı"
