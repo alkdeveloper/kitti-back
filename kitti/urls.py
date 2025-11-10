@@ -2,9 +2,13 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
 from django.conf import settings
+from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
 
 urlpatterns = [
+    # Root URL'den Swagger'a yönlendirme
+    path("", RedirectView.as_view(url="/api/docs/swagger/", permanent=False), name="home"),
+    
     path("admin/", admin.site.urls),
     path('api/', include('products.urls')),
     path('api/', include('site_settings.urls')),
