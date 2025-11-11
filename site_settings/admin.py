@@ -2,11 +2,12 @@ from django.contrib import admin
 from django.utils.translation import gettext_lazy as _
 from django.utils.safestring import mark_safe
 from modeltranslation.admin import TranslationAdmin, TranslationTabularInline
+from django.contrib.admin import TabularInline
 
 from .models import (
     SiteSettings, MenuItem, Header, GenericSection,
     GenericSectionOurStory, GenericSectionContact, ContactAddresses, ContactMails,
-    GenericSectionWholesale, FooterPolicy, SocialMedia, FooterInfo, FAQItem
+    GenericSectionWholesale, FooterPolicy, SocialMedia, FooterInfo, FAQItem, PageMeta
 )
 
 # -----------------------------------------------------------------------------
@@ -24,6 +25,14 @@ class BaseTranslationAdmin(TranslationAdmin):
 # -----------------------------------------------------------------------------
 # Site Ayarları Admin Paneli (SiteSettings)
 # -----------------------------------------------------------------------------
+class PageMetaInline(TabularInline):
+    """PageMeta için inline admin"""
+    model = PageMeta
+    extra = 0
+    fields = ('page', 'meta_title_tr', 'meta_title_en', 'meta_description_tr', 'meta_description_en')
+    verbose_name = "Sayfa Meta Bilgisi"
+    verbose_name_plural = "Sayfa Meta Bilgileri"
+
 @admin.register(SiteSettings)
 class SiteSettingsAdmin(BaseTranslationAdmin):
     # 'favicon' için de bir önizleme alanı ekliyoruz.
@@ -36,6 +45,8 @@ class SiteSettingsAdmin(BaseTranslationAdmin):
             'fields': ('site_title', 'site_description', 'logo', 'favicon')
         }),
     )
+    
+    inlines = [PageMetaInline]
 
     def display_logo_field(self, obj):
         return self.display_image(obj, 'logo')
@@ -182,4 +193,33 @@ class FAQItemAdmin(BaseTranslationAdmin):
     list_filter = ('site',)
     search_fields = ('question', 'answer')
     ordering = ['order', 'id']
+
+# -----------------------------------------------------------------------------
+# Page Meta (Sayfa Meta Bilgileri) Admin Paneli
+# SiteSettings içinde inline olarak gösteriliyor, ayrı admin paneli opsiyonel
+# -----------------------------------------------------------------------------
+@admin.register(PageMeta)
+class PageMetaAdmin(admin.ModelAdmin):
+    list_display = ('id', 'page', 'meta_title_tr', 'meta_title_en')
+    list_filter = ('site', 'page')
+    search_fields = ('meta_title_tr', 'meta_title_en', 'meta_description_tr', 'meta_description_en')
+    ordering = ['page']
+    
+    fieldsets = (
+        ('Sayfa Bilgisi', {
+            'fields': ('site', 'page')
+        }),
+        ('Meta Title (Türkçe)', {
+            'fields': ('meta_title_tr',)
+        }),
+        ('Meta Title (İngilizce)', {
+            'fields': ('meta_title_en',)
+        }),
+        ('Meta Description (Türkçe)', {
+            'fields': ('meta_description_tr',)
+        }),
+        ('Meta Description (İngilizce)', {
+            'fields': ('meta_description_en',)
+        }),
+    )
 

@@ -571,6 +571,62 @@ class FAQItemSerializer(serializers.ModelSerializer):
         
         return super().to_internal_value(data)
 
+class PageMetaSerializer(serializers.ModelSerializer):
+    """Sayfa Meta Bilgileri Serializer"""
+    meta_title = serializers.SerializerMethodField()
+    meta_description = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = PageMeta
+        fields = [
+            'id', 'page',
+            'meta_title', 'meta_title_tr', 'meta_title_en',
+            'meta_description', 'meta_description_tr', 'meta_description_en'
+        ]
+        extra_kwargs = {
+            'meta_title_tr': {'required': False},
+            'meta_title_en': {'required': False},
+            'meta_description_tr': {'required': False},
+            'meta_description_en': {'required': False},
+        }
+    
+    def get_meta_title(self, obj):
+        """Aktif dile göre meta_title döndür"""
+        language = get_language()
+        if language == 'en':
+            return obj.meta_title_en or obj.meta_title_tr
+        return obj.meta_title_tr or obj.meta_title_en
+    
+    def get_meta_description(self, obj):
+        """Aktif dile göre meta_description döndür"""
+        language = get_language()
+        if language == 'en':
+            return obj.meta_description_en or obj.meta_description_tr
+        return obj.meta_description_tr or obj.meta_description_en
+    
+    def to_internal_value(self, data):
+        # Request'ten lang parametresini al
+        request = self.context.get('request')
+        lang = 'tr'  # Varsayılan
+        if request:
+            lang = request.query_params.get('lang', 'tr')
+        
+        # Boş string'leri None'a çevir ve lang'a göre map et
+        if isinstance(data, dict):
+            data = data.copy()
+            
+            # meta_title ve meta_description'i lang'a göre map et
+            for field in ['meta_title', 'meta_description']:
+                if field in data:
+                    if lang == 'en' and f'{field}_en' not in data:
+                        data[f'{field}_en'] = data[field]
+                        data.pop(field, None)
+                    elif lang == 'tr' and f'{field}_tr' not in data:
+                        data[f'{field}_tr'] = data[field]
+                        data.pop(field, None)
+        
+        return super().to_internal_value(data)
+
 class FooterInfoSerializer(serializers.ModelSerializer):
     logo_url = serializers.SerializerMethodField()
     footer_text = serializers.SerializerMethodField()
@@ -668,6 +724,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     sections_contact = GenericSectionContactSerializer(many=True, required=False)
     sections_wholasale = GenericSectionWholesaleSerializer(many=True, required=False)
     faq_items = FAQItemSerializer(many=True, required=False)
+    page_metas = PageMetaSerializer(many=True, required=False)
 
     class Meta:
         model = SiteSettings
@@ -678,7 +735,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
             'menu_items', 'headers', 'sections',
             'footer_policies', 'social_links', 'footer_info',
             'sections_our_story', 'sections_contact', 'sections_wholasale',
-            'faq_items',
+            'faq_items', 'page_metas',
         ]
         extra_kwargs = {
             'favicon': {'write_only': True, 'required': False, 'allow_null': True},
@@ -854,6 +911,10 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         for faq_data in faq_items_data:
             FAQItem.objects.create(site=site_settings, **faq_data)
 
+        # Page metas oluştur
+        for page_meta_data in page_metas_data:
+            PageMeta.objects.create(site=site_settings, **page_meta_data)
+
         return site_settings
 
     def update(self, instance, validated_data):
@@ -871,6 +932,7 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         sections_contact_data = validated_data.pop('sections_contact', None)
         sections_wholasale_data = validated_data.pop('sections_wholasale', None)
         faq_items_data = validated_data.pop('faq_items', None)
+        page_metas_data = validated_data.pop('page_metas', None)
 
         # Ana alanları güncelle
         instance.site_title = validated_data.get('site_title', instance.site_title)
@@ -1089,6 +1151,25 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
                 else:
                     # Yeni obje oluştur
                     FAQItem.objects.create(site=instance, **faq_data)
+
+        # Page metas güncelle
+        if page_metas_data is not None:
+            # Mevcut page meta objelerini al
+            existing_page_metas = {pm.page: pm for pm in instance.page_metas.all()}
+            
+            for page_meta_data in page_metas_data:
+                page = page_meta_data.get('page')
+                if page and page in existing_page_metas:
+                    # Mevcut obje varsa güncelle
+                    page_meta = existing_page_metas[page]
+                    # Sadece gönderilen alanları güncelle, diğerlerini koru
+                    for key, value in page_meta_data.items():
+                        if value is not None and key != 'page':  # page alanını güncelleme
+                            setattr(page_meta, key, value)
+                    page_meta.save()
+                elif page:
+                    # Yeni obje oluştur
+                    PageMeta.objects.create(site=instance, **page_meta_data)
 
         return instance
 

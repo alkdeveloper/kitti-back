@@ -257,6 +257,45 @@ class CategoryWithProductsSerializer(serializers.ModelSerializer):
         
         return result
 
+class CategoryProductsSerializer(serializers.ModelSerializer):
+    """Kategori ve sadece altındaki ürünleri döndüren serializer"""
+    products = serializers.SerializerMethodField()
+    title = serializers.SerializerMethodField()
+    description = serializers.SerializerMethodField()
+    icon_url = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = Item
+        fields = [
+            'id', 'title', 'title_tr', 'title_en',
+            'description', 'description_tr', 'description_en',
+            'icon', 'icon_url', 'category_type', 'level', 'products'
+        ]
+    
+    def get_title(self, obj):
+        language = get_language()
+        if language == 'en':
+            return obj.title_en or obj.title_tr
+        return obj.title_tr or obj.title_en
+    
+    def get_description(self, obj):
+        language = get_language()
+        if language == 'en':
+            return obj.description_en or obj.description_tr
+        return obj.description_tr or obj.description_en
+    
+    def get_icon_url(self, obj):
+        """Icon field için URL döndür"""
+        request = self.context.get('request')
+        if obj.icon and hasattr(obj.icon, 'url'):
+            return request.build_absolute_uri(obj.icon.url) if request else obj.icon.url
+        return None
+    
+    def get_products(self, obj):
+        """Kategorinin altındaki sadece ürünleri getir"""
+        products = obj.children.filter(item_type='product').order_by('lft')
+        return ProductSerializer(products, many=True, context=self.context).data
+
 class SliderSerializer(serializers.ModelSerializer):
     """Slider serializer"""
     title = serializers.SerializerMethodField()

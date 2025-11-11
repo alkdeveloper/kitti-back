@@ -13,6 +13,7 @@ from .serializers import (
     CategorySerializer, 
     ProductSerializer, 
     CategoryWithProductsSerializer,
+    CategoryProductsSerializer,
     SliderSerializer
 )
 
@@ -505,3 +506,68 @@ class SliderListView(generics.ListAPIView):
             activate(lang)
         
         return super().get(request, *args, **kwargs)
+
+class CategoriesWithProductsView(generics.ListAPIView):
+    """
+    Tüm kategorileri ve her kategorinin altındaki ürünleri döndürür.
+    JSON formatında nested yapı: categories -> products
+    """
+    serializer_class = CategoryProductsSerializer
+    permission_classes = [AllowAny]
+    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
+    filterset_fields = ['category_type', 'level']
+    search_fields = ['title_tr', 'title_en', 'description_tr', 'description_en']
+    ordering_fields = ['lft', 'level', 'id']
+    ordering = ['lft']
+    
+    def get_queryset(self):
+        """Sadece kategorileri getir (parent=None olanlar veya tüm kategoriler)"""
+        queryset = Item.objects.filter(item_type='category').prefetch_related('children', 'children__images')
+        
+        # Eğer sadece root kategorileri istiyorsa
+        root_only = self.request.query_params.get('root_only', 'false').lower() == 'true'
+        if root_only:
+            queryset = queryset.filter(level=0)
+        
+        return queryset
+    
+    @extend_schema(
+        summary="Kategoriler ve Ürünleri Listele",
+        parameters=[
+            OpenApiParameter(
+                name='lang',
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description='Dil kodu (tr/en)',
+                enum=['tr', 'en']
+            ),
+            OpenApiParameter(
+                name='category_type',
+                type=OpenApiTypes.STR,
+                location=OpenApiParameter.QUERY,
+                description='Kategori tipi',
+                enum=['type1', 'type2', 'type3', 'type4', 'type5']
+            ),
+            OpenApiParameter(
+                name='root_only',
+                type=OpenApiTypes.BOOL,
+                location=OpenApiParameter.QUERY,
+                description='Sadece root kategorileri getir (true/false)',
+            ),
+        ],
+        responses={200: CategoryProductsSerializer(many=True)},
+        description="Tüm kategorileri ve her kategorinin altındaki ürünleri listeler"
+    )
+    def get(self, request, *args, **kwargs):
+        # Dil ayarını kontrol et
+        lang = request.query_params.get('lang', 'tr')
+        if lang in ['tr', 'en']:
+            activate(lang)
+        
+        # Response'u özelleştir
+        queryset = self.filter_queryset(self.get_queryset())
+        serializer = self.get_serializer(queryset, many=True)
+        
+        return Response({
+            'categories': serializer.data
+        })

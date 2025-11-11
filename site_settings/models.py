@@ -238,3 +238,33 @@ class FAQItem(models.Model):
     def __str__(self):
         return self.question
 
+
+class PageMeta(models.Model):
+    """Sayfa Meta Bilgileri Modeli"""
+    PAGE_CHOICES = [
+        ('home', '/'),
+        ('products', '/products'),
+        ('our-story', '/our-story'),
+        ('contact', '/contact'),
+        ('toptan-portal', '/toptan-portal'),
+        ('aydinlatma-metni', '/aydinlatma-metni'),
+        ('cerez-politikasi', '/cerez-politikasi'),
+        ('ileti-onay-metni', '/ileti-onay-metni'),
+    ]
+    
+    site = models.ForeignKey(SiteSettings, on_delete=models.CASCADE, related_name='page_metas')
+    page = models.CharField(max_length=50, choices=PAGE_CHOICES)
+    
+    class Meta:
+        verbose_name = "Sayfa Meta Bilgisi"
+        verbose_name_plural = "Sayfa Meta Bilgileri"
+        ordering = ['page']
+        unique_together = [['site', 'page']]
+    meta_title_tr = models.CharField(max_length=255, blank=True, null=True, verbose_name="Meta Title (TR)")
+    meta_title_en = models.CharField(max_length=255, blank=True, null=True, verbose_name="Meta Title (EN)")
+    meta_description_tr = models.TextField(blank=True, null=True, verbose_name="Meta Description (TR)")
+    meta_description_en = models.TextField(blank=True, null=True, verbose_name="Meta Description (EN)")
+
+    def __str__(self):
+        return f"{self.get_page_display()} - Meta"
+

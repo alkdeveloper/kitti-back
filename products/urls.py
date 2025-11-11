@@ -8,6 +8,7 @@ from .views import (
     CategoryViewSet,
     SliderListView,
     SliderViewSet,
+    CategoriesWithProductsView,
 )
 
 router = DefaultRouter()
@@ -17,6 +18,7 @@ router.register('sliders', SliderViewSet, basename='slider-items')
 
 urlpatterns = [
     path('categories/', CategoryListView.as_view(), name='category-list'),
+    path('categories-with-products/', CategoriesWithProductsView.as_view(), name='categories-with-products'),
     path('products/', ProductListView.as_view(), name='product-list'),
     # SliderListView kaldırıldı, router üzerinden SliderViewSet kullanılıyor
     path('', include(router.urls)),

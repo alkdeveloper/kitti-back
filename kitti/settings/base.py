@@ -247,6 +247,7 @@ JAZZMIN_SETTINGS = {
         "site_settings.FooterPolicy": "fas fa-file-contract",
         "site_settings.SocialMedia": "fas fa-share-alt",
         "site_settings.FAQItem": "fas fa-question-circle",
+        "site_settings.PageMeta": "fas fa-tags",
     },
     
     # Default icons

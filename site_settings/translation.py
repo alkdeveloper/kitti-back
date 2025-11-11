@@ -1,7 +1,7 @@
 from modeltranslation.translator import register, TranslationOptions
 from .models import (
     SiteSettings, Header, GenericSectionOurStory, GenericSectionContact,
-    GenericSection, FooterPolicy, FooterInfo, MenuItem, ContactAddresses, GenericSectionWholesale, FAQItem
+    GenericSection, FooterPolicy, FooterInfo, MenuItem, ContactAddresses, GenericSectionWholesale, FAQItem, PageMeta
 )
 
 @register(MenuItem)
