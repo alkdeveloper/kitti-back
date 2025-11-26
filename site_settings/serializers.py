@@ -729,7 +729,8 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
     class Meta:
         model = SiteSettings
         fields = [
-            'id', 'logo', 'favicon', 
+            'id', 'logo', 'favicon',
+            'head_tracking_code', 'body_tracking_code',
             'site_title', 'site_title_tr', 'site_title_en',
             'site_description', 'site_description_tr', 'site_description_en',
             'menu_items', 'headers', 'sections',
@@ -740,6 +741,8 @@ class SiteSettingsSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'favicon': {'write_only': True, 'required': False, 'allow_null': True},
             'logo': {'write_only': True, 'required': False, 'allow_null': True},
+            'head_tracking_code': {'required': False, 'allow_null': True},
+            'body_tracking_code': {'required': False, 'allow_null': True},
             'site_title_tr': {'required': False},
             'site_title_en': {'required': False},
             'site_description_tr': {'required': False},

@@ -44,6 +44,14 @@ class SiteSettingsAdmin(BaseTranslationAdmin):
         ("Genel Bilgiler", {
             'fields': ('site_title', 'site_description', 'logo', 'favicon')
         }),
+        ("Takip Kodları", {
+            'fields': ('head_tracking_code', 'body_tracking_code'),
+            'description': _(
+                "Google Tag (gtag.js), Meta Pixel ve benzeri global takip kodlarını buraya ekleyin. "
+                "Head için olan script'leri 'Head Tracking Code' alanına, noscript/body için olanları "
+                "'Body Tracking Code' alanına ekleyin."
+            ),
+        }),
     )
     
     inlines = [PageMetaInline]
