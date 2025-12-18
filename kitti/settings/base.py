@@ -283,6 +283,8 @@ else:
     CORS_ALLOWED_ORIGINS = [
         "https://kitti.com.tr",
         "http://kitti.com.tr",  # For development/testing
+        "https://www.kitti.com.tr",
+        "http://www.kitti.com.tr",
     ]
 
 CORS_ALLOW_CREDENTIALS = True
