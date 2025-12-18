@@ -144,6 +144,9 @@ REST_FRAMEWORK = {
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny',
+    ],
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
         'rest_framework.filters.SearchFilter',
@@ -243,6 +246,8 @@ JAZZMIN_SETTINGS = {
         "site_settings.FooterInfo": "fas fa-info-circle",
         "site_settings.FooterPolicy": "fas fa-file-contract",
         "site_settings.SocialMedia": "fas fa-share-alt",
+        "site_settings.FAQItem": "fas fa-question-circle",
+        "site_settings.PageMeta": "fas fa-tags",
     },
     
     # Default icons
