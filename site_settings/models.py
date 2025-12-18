@@ -13,6 +13,20 @@ class SiteSettings(models.Model):
     )
     site_title = models.CharField(max_length=255)
     site_description = RichTextField(blank=True, null=True)
+    head_tracking_code = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "Sayfa <head> içerisine eklenecek global takip kodları (ör: Google tag gtag.js, Meta Pixel script vb.)."
+        ),
+    )
+    body_tracking_code = models.TextField(
+        blank=True,
+        null=True,
+        help_text=_(
+            "Sayfa <body> içerisine eklenecek takip kodları (ör: noscript piksel kodu vb.)."
+        ),
+    )
 
     class Meta:
         verbose_name = "Genel Site Ayarı"
