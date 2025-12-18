@@ -268,5 +268,16 @@ JAZZMIN_SETTINGS = {
     },
 }
 
-CORS_ALLOW_ALL_ORIGINS = True
+# CORS Settings
+# Development: Allow all origins
+# Production: Only allow frontend domain
+if DEBUG:
+    CORS_ALLOW_ALL_ORIGINS = True
+else:
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = [
+        "https://kitti.com.tr",
+        "http://kitti.com.tr",  # For development/testing
+    ]
+
 CORS_ALLOW_CREDENTIALS = True
